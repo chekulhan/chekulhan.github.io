@@ -50,7 +50,7 @@ function display_answer() {
 		if(pl.type.is_substitution(answer)) {
 			// Get the value of the food
 			var result = answer.lookup("X");
-      console.log(result);
+
       finalresult += result + "<br>";
 	
       $('#results').show();
@@ -101,6 +101,7 @@ function display_answer() {
                 break;
               case "person_loans":
                 var name = $("#name").val();
+                name.toLowerCase(); // prolog requires lower case for queries
                 sQuery = "takeout_loan(" + name + ", X).";
                 break;
 
@@ -233,7 +234,6 @@ function display_answer() {
             </div>
           </div>
 
-          <hr>
           <p class="is-size-6">
             Other queries:
           </p>
