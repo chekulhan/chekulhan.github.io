@@ -192,87 +192,97 @@ function display_answer() {
 </nav>
 <!-- end nav bar -->
 
-  <section class="section">
-    <div class="container">
+  <section class="section has-background-primary">
+    <div class="container has-text-centered">
       <h2 class="title is-2">
         Loan and Credit Card System
       </h2>
       <p class="subtitle">
         Written in the <b>Prolog</b> programming language using <a href="http://tau-prolog.org/" target="__blank">tau-prolog</a>.
       </p>
+    </section>
 
-      <div class="columns">
-        <div class="column">
-          <p class=" is-3">
+
+    <section class="section has-background-light">
+      <div class="container has-text-centered">       
+
+        <div class="is-size-3">
+          Go ahead and query the loan system 
+        </div>
+        <div class="help">Your results will appear at the bottom of the screen.</div>
+        <br>
+
+        <!-- Name -->
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" id="name" style="width: 200px;" placeholder="Please enter a name." >
+            <button id="btnQuery8" data-action="person_loans" class="btnQuery button is-primary">What loans?</button><br>
+
+          </div>
+        </div>
+
         
+        <br>
+        <div class="columns">
+          <div class="column is-one-quarter">
+            <button id="btnQuery1" data-action="cards" class="btnQuery button is-primary">What card types are there?</button>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery2" data-action="loans" class="btnQuery button is-primary">What loan types are there?</button><br><br>
+
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery3" data-action="debit" class="btnQuery button is-primary">Who has a debit card?</button><br><br>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery4" data-action="credit" class="btnQuery button is-primary">Who has a credit card?</button><br><br>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-one-quarter">
+            <button id="btnQuery5" data-action="who_has_mortgage" class="btnQuery button is-primary">Who has a mortgage?</button><br><br>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery6" data-action="who_has_car_loan" class="btnQuery button is-primary">Who has a car loan?</button><br><br>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery7" data-action="who_has_student_loan" class="btnQuery button is-primary">Who has a student loan?</button><br><br>
+          </div>
+         
+        </div>
+
+        
+        <div id="entries" style="color: lightcoral;"></div>
+
+        <br>
+        <div id="results" class="box" style="display: none;">
+          <article class="media">
+          <div class="media-content">
+            <div class="content-placeholder"></div>
+          </div>
+        </article>
+        </div>
+        
+
+    </div>
+</section>
+
+    <section class="section has-background-warning">
+      <div class="container has-text-centered">
+
             <p class="is-size-6">The Prolog Knowledge Base:</p>
             <!-- Prolog Program -->
-            <textarea rows="30" cols="50" id="program" class="textarea is-info is-small"></textarea>
+            <textarea rows="22" cols="50" id="program" class="textarea is-info is-small"></textarea>
             <br>
             
-            <button id="btnUpdateProgram" class="button is-warning is-light">Update Knowledge Base</button><br><br>
+            <button id="btnUpdateProgram" class="button is-danger is-light">Update Knowledge Base</button><br><br>
             <p class="help">Use this button to update the knowledge base. i.e add a new line.</p>
             <p class="help">For example, add the line: <i>takeout_card(sarah, card(debit)).</i></p>
         </div>  
+      </section>
 
 
-            
-        <div class="column">
-          <hr>
-          <div class="is-size-6">
-            Query the loan system 
-          </div>
-          <div class="help">Your results will appear at the bottom of the screen.</div>
-          
-
-          <!-- Name -->
-          <div class="field">
-            <div class="control">
-              <input class="input" type="text" id="name" style="width: 200px;" placeholder="Please enter a name." >
-              <button id="btnQuery8" data-action="person_loans" class="btnQuery button is-primary">What loans?</button><br>
-
-            </div>
-          </div>
-
-          <p class="is-size-6">
-            Other queries:
-          </p>
-          <br>
-          <!-- Button -->
-          <button id="btnQuery1" data-action="cards" class="btnQuery button is-primary">What card types are there?</button><br><br>
-          <button id="btnQuery2" data-action="loans" class="btnQuery button is-primary">What loan types are there?</button><br><br>
-          
-          <button id="btnQuery3" data-action="debit" class="btnQuery button is-primary">Who has a debit card?</button><br><br>
-          <button id="btnQuery4" data-action="credit" class="btnQuery button is-primary">Who has a credit card?</button><br><br>
-          <button id="btnQuery5" data-action="who_has_mortgage" class="btnQuery button is-primary">Who has a mortgage?</button><br><br>
-          <button id="btnQuery6" data-action="who_has_car_loan" class="btnQuery button is-primary">Who has a car loan?</button><br><br>
-          <button id="btnQuery7" data-action="who_has_student_loan" class="btnQuery button is-primary">Who has a student loan?</button><br><br>
-
-          
-          <div id="entries" style="color: lightcoral;"></div>
-
-          <br>
-          <div id="results" class="box" style="display: none;">
-            <article class="media">
-            <div class="media-content">
-              <div class="content-placeholder"></div>
-            </div>
-          </article>
-        </div>
-          
-          
-          
-      
-              </div>
-          </div>
-          
-        </p>
-      </div>
-          
-        </div>
-      </div>
-    </div>
-  </section>
+ 
 
 
   <script>
