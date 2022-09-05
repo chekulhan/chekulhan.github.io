@@ -101,7 +101,7 @@ function display_answer() {
                 break;
               case "person_loans":
                 var name = $("#name").val();
-                name.toLowerCase(); // prolog requires lower case for queries
+                name = name.toLowerCase(); // prolog requires lower case for queries
                 sQuery = "takeout_loan(" + name + ", X).";
                 break;
 
@@ -279,7 +279,8 @@ function display_answer() {
             
             <button id="btnUpdateProgram" class="button is-danger is-light">Update Knowledge Base</button><br><br>
             <p class="help">Use this button to update the knowledge base. i.e add a new line.</p>
-            <p class="help">For example, add the line: <i>takeout_card(sarah, card(debit)).</i></p>
+            <p class="help">For example, add the line: <i>takeout_card(sarah, card(debit)).</i> OR <i>takeout_loan(sarah, loan(student)).</i></p>
+	    <p class="help">Lower case letters must be used and a full stop is required. These are prolog conventions.</i></p>
         </div>  
       </section>
 
