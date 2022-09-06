@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <title>chekulhan - prolog loan system</title>
+    <link rel="icon" type="image" href="images/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.9.1/css/OverlayScrollbars.min.css'>
+    
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <!-- Bulma Version 0.9.0-->
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bulma-modal-fx/dist/css/modal-fx.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="scripts/tau-prolog.js"></script>
+    
+    <script type="text/javascript">
+        var program = `list_ncd(au100, ['Fixed interest interest 2 year term at 6%', 100000, 2, 0.06]).
+  list_ncd(au200, ['Fixed interest interest 6 month term at 4.5%', 500000, 0.5,0.45 ]).
+  list_ncd(au300, ['Fixed interest 3 year term at 1.25%', 1000000, 3, 0.125]). 
+  has_ncd(jon, au300).
+  has_ncd(mary, au200).
+  has_ncd(mary, au300).
+  has_ncd(susan, au100).
+  has_ncd(susan, au300).
+  `;
+  
+  function fromList(xs) {
+      var arr = [];
+      while(pl.type.is_term(xs) && xs.indicator === "./2") {
+          arr.push(xs.args[0]);
+          xs = xs.args[1];
+      }
+      if(pl.type.is_term(xs) && xs.indicator === "[]/0")
+          return arr;
+      return null;
+  }
+  
+              
+    function display_answer(action) {
+    
+      $('.content-placeholder').html("");
+      finalresult = "";
+      // Return callback function
+      return function(answer) {
+        
+      
+        if(pl.type.is_substitution(answer)) {
+    
+          
+          if (action == "find_by_isin")  {
+            var arrResults = fromList(answer.lookup("X"));
+            var objNCD = {};
+            objNCD.description = arrResults[0];
+            objNCD.facevalue=arrResults[1];
+            objNCD.term=arrResults[2];
+            objNCD.interestrate=arrResults[3];
+            
+  
+            s = "<b>" + objNCD.description + "</b><br>";
+            s += "Face Value: " + objNCD.facevalue + "<br>";
+            s += "Term: " + objNCD.term + "<br>";
+            s += "Interest Rate: " + parseFloat(objNCD.interestrate).toFixed(2) + "%<br>";
+            
+      
+            finalresult += s + "<br>";
+          }
+          else {
+            var result = answer.lookup("X");
+    
+            finalresult += result + "<br>";
+          }
+          
+      
+          $('#results').show();
+          $('.content-placeholder').html(finalresult);
+        }
+      };
+    }
+    
+    
+        $(document).ready(function(){
+    
+            $('#program').val(program);
+            $("#btnUpdateProgram").click(function(){
+              program = $('#program').val();
+              alert("Your prolog knowledge base has been updated. You can now execute a query.");
+            });
+    
+         
+  
+            $(".btnQuery").click(function(){
+                action = $(this).data("action");
+                
+                switch(action) {
+                  
+                  case "find_by_isin":
+                    var isin = $("#isin").val();
+                    isin = isin.toLowerCase(); // prolog requires lower case for queries
+                    sQuery = "list_ncd(" + isin + ", X).";
+                    break;
+                  
+                  case "who_has_ncd":
+                    
+                    var isin = $("#isin").val();
+                    isin = isin.toLowerCase(); // prolog requires lower case for queries
+                    
+                    sQuery = "has_ncd(X," + isin + ").";
+                    break;
+                    
+    
+                }
+                $('#entries').html('Loading knowledge base...');
+                var session = pl.create(1000);
+    
+                // Create session
+                var session = pl.create(1000);
+                // Get program
+    
+                session.consult(program);
+    
+                session.query(sQuery);
+  
+                // Find answers
+                session.answers(display_answer(action), 1000);
+                $('#entries').html("");
+                $('#prolog_code').html("Your prolog query was: <i>" + sQuery + "</i>");
+              }); 
+    
+        }); // end doc ready
+    
+     
+        </script>
+
+</head>
+
+<body>
+
+  <!-- begin nav bar -->
+<nav class="navbar is-fixed-top is-info" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <img src="images/logo.png">
+    </a>
+
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a href="/" class="navbar-item">
+        Home
+      </a>
+
+      <a href="https://che-kulhan.medium.com/" target="_blank" class="navbar-item">
+        Articles
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          Projects
+        </a>
+
+        <div class="navbar-dropdown">
+          <a href="http://jolastaikasi.pythonanywhere.com/" target="_blank" class="navbar-item">
+            Euskera
+          </a>
+          <hr class="navbar-divider">
+          <a href="chekulhan.github.io" class="navbar-item">
+            Prolog Loan System
+          </a>
+          <a href="ncd.html" class="navbar-item">
+            Prolog Money Markets
+          </a>
+          
+
+         
+        </div>
+      </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" disabled>
+            <strong>Sign up</strong>
+          </a>
+          <a class="button is-light" disabled>
+            Log in
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- end nav bar -->
+
+ <section class="hero is-info is-small">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <img src="images/logo.png" alt="jolastaikasi" class="modal-button" data-target="modal-image2">
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section has-background-primary">
+    <div class="container has-text-centered">
+      <h2 class="title is-2 has-text-white-bis">
+        Negotiable Certificate Deposit (NCD) System
+      </h2>
+      <p class="subtitle">
+        Written in the <b>Prolog</b> programming language using <br><br>
+         <a href="http://tau-prolog.org/" target="__blank"><img src="images/tauprolog64.png"></a>
+      </p>
+      <p class="has-text-white-bis">
+        An investment in an underlying security
+being a negotiable certificate of deposit (NCD) where
+the term of the security is generally for a period of
+1 day to 2 years. The underlying security is issued
+by a bank. The interest rate applicable on an NCD is determined on the
+deal date by reference to prevailing market interest
+rates and is fixed for the term of the investment. <br>
+      An NCD entitles the
+person in possession of it to payment, by the issuing
+bank, of a specified sum of money (face value) on a
+particular date (maturity date). </p>
+
+    </section>
+
+
+    <section class="section has-background-light">
+      <div class="container has-text-centered">       
+
+        <div class="is-size-3">
+          Go ahead and query the Negotiable Certificate Deposit System 
+        </div>
+        <div class="help">Your results will appear after the buttons below.</div>
+        <br>
+
+        <!-- Name -->
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" id="isin" style="width: 300px;" placeholder="Please enter an ISIN. e.g au100" >
+            <button id="btnQuery1" data-action="find_by_isin" class="btnQuery button is-primary">Find by ISIN</button>
+            &nbsp;
+            <button id="btnQuery2" data-action="who_has_ncd" class="btnQuery button is-primary">Who has an NCD?</button><br><br>
+
+
+          </div>
+        </div>
+
+        
+        <br>
+        
+        
+
+        
+        <div id="entries" style="color: lightcoral;"></div>
+
+        
+        <div id="prolog_code" class="help"></div>
+
+        <br>
+        <div id="results" class="box" style="display: none;">
+          <article class="media">
+          <div class="media-content">
+            <div class="content-placeholder"></div>
+          </div>
+        </article>
+        </div>
+        
+
+    </div>
+</section>
+
+    <section class="section has-background-warning">
+      <div class="container has-text-centered">
+
+            <div class="is-size-3">The Prolog Knowledge Base</div>
+      <div class="help">Below is the prolog source code. Can you figure out how it works?</div>
+      <br>
+            <!-- Prolog Program -->
+            <textarea rows="10" cols="30" id="program" class="textarea is-info is-small"></textarea>
+            <br>
+            
+            <button id="btnUpdateProgram" class="button is-danger is-light">Update Knowledge Base</button><br><br>
+            <p class="help">Use this button to update the knowledge base. i.e add a new line.</p>
+            <p class="help">For example, add the line: <i>list_ncd(au900, ['Fixed interest 1 year term at 1.5%', 100000, 1, 0.15]).</i> OR <i>has_ncd(steven, au300).</i></p>
+      <p class="help">Lower case letters must be used and a full stop is required. These are prolog conventions.</i></p>
+        </div>  
+      </section>
+
+
+ 
+
+
+  <script>
+    $(document).ready(function() {
+  
+      // Check for click events on the navbar burger icon
+      $(".navbar-burger").click(function() {
+  
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          $(".navbar-burger").toggleClass("is-active");
+          $(".navbar-menu").toggleClass("is-active");
+  
+      });
+    });
+  </script>
+</body>
+
+</html>
