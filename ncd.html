@@ -65,6 +65,7 @@ has_ncd(susan, au300).
             s += "Face Value: " + objNCD.facevalue + "<br>";
             s += "Term: " + objNCD.term + "<br>";
             s += "Interest Rate: " + parseFloat(objNCD.interestrate).toFixed(2) + "%<br>";
+            s += "<br><br><button id='btnQuery2' data-action='who_has_ncd' class='btnQuery button is-primary'>Who has an NCD?</button>";
             
       
             finalresult += s + "<br>";
@@ -214,11 +215,10 @@ has_ncd(susan, au300).
         Written in the <b>Prolog</b> programming language using <br><br>
          <a href="http://tau-prolog.org/" target="__blank"><img src="images/tauprolog64.png"></a>
       </p>
-      <p class="has-text-white-bis help">
-        An investment in an underlying security
-being a negotiable certificate of deposit (NCD) where
-the term of the security is generally for a period of
-1 day to 2 years. The underlying security is issued
+      <p class="has-text-white-bis is-size-7">
+        Negotiable certificate of deposits (NCD) are
+money market products, usually with a minimum face value of $100,000 and 
+1 day to 2 year term. The underlying security is issued
 by a bank. The interest rate applicable on an NCD is determined on the
 deal date by reference to prevailing market interest
 rates and is fixed for the term of the investment. <br>
