@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
+    <title>chekulhan - prolog loan system</title>
+    <link rel="icon" type="image" href="images/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.9.1/css/OverlayScrollbars.min.css'>
+    
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <!-- Bulma Version 0.9.0-->
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bulma-modal-fx/dist/css/modal-fx.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="scripts/tau-prolog.js"></script>
+    
+    <script type="text/javascript">
+    var program = `card(credit).
+card(debit).
+loan(mortgage).
+loan(student).
+loan(car).
+takeout_loan(jon, loan(mortgage)).
+takeout_loan(jon, loan(student)).
+takeout_loan(mary, loan(car)).
+takeout_card(mary, card(credit)).
+takeout_card(mary, card(debit)).
+takeout_loan(henry, loan(mortgage)).
+takeout_loan(henry, loan(student)).
+takeout_loan(henry, loan(car)).
+takeout_card(henry, card(debit)).
+takeout_card(henry, card(credit)).
+takeout_card(sarah, card(credit)).
+has_loan(X):-takeout_loan(X, loan(mortgage));
+takeout_loan(X, loan(student));takeout_loan(X, loan(car)).
+is_a_gold_customer(X):-takeout_loan(X, loan(mortgage)),takeout_loan(X, loan(student)),takeout_loan(X, loan(car)),takeout_card(X, card(credit)),takeout_card(X, card(debit)). 
+is_a_silver_customer(X):-(takeout_loan(X, loan(mortgage)),takeout_loan(X, loan(student)),takeout_loan(X, loan(car)));(takeout_card(X, card(credit)),takeout_card(X, card(debit))).
+`;
+          
+function display_answer() {
+
+  $('.content-placeholder').html("");
+  finalresult = "";
+	// Return callback function
+	return function(answer) {
+		// Valid answer
+		if(pl.type.is_substitution(answer)) {
+			// Get the value of the food
+			var result = answer.lookup("X");
+
+      finalresult += result + "<br>";
+	
+      $('#results').show();
+      $('.content-placeholder').html(finalresult);
+		}
+	};
+}
+
+
+    $(document).ready(function(){
+
+        $('#program').val(program);
+        $("#btnUpdateProgram").click(function(){
+          program = $('#program').val();
+          alert("Your prolog knowledge base has been updated. You can now execute a query.");
+        });
+
+        $(".btnQuery").click(function(){
+            action = $(this).data("action");
+            
+            switch(action) {
+              case "cards":
+                sQuery = "card(X).";
+                break;
+
+              case "loans":
+                sQuery = "loan(X).";
+                break;
+
+              case "credit":
+                sQuery = "takeout_card(X,card(credit)).";
+                break;
+
+              case "debit":
+                sQuery = "takeout_card(X,card(debit)).";
+                break;
+              
+              case "who_has_mortgage":
+                sQuery = "takeout_loan(X, loan(mortgage)).";
+                break;
+
+              case "who_has_car_loan":
+                sQuery = "takeout_loan(X, loan(car)).";
+                break;
+
+              case "who_has_student_loan":
+                sQuery = "takeout_loan(X, loan(student)).";
+                break;
+              case "person_loans":
+                var name = $("#name").val();
+                name = name.toLowerCase(); // prolog requires lower case for queries
+                sQuery = "takeout_loan(" + name + ", X).";
+                break;
+
+
+
+            }
+            $('#entries').html('Loading knowledge base...');
+            var session = pl.create(1000);
+
+            // Create session
+            var session = pl.create(1000);
+            // Get program
+
+            session.consult(program);
+
+            session.query(sQuery);
+            // Find answers
+            session.answers(display_answer(), 1000);
+            $('#entries').html("");
+          }); 
+
+    }); // end doc ready
+
+ 
+    </script>
+
+</head>
+
+<body>
+
+  <!-- begin nav bar -->
+<nav class="navbar is-fixed-top is-info" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <img src="images/logo.png">
+    </a>
+
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a href="/" class="navbar-item">
+        Home
+      </a>
+
+      <a href="https://che-kulhan.medium.com/" target="_blank" class="navbar-item">
+        Articles
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          Projects
+        </a>
+
+        <div class="navbar-dropdown">
+          <a href="http://jolastaikasi.pythonanywhere.com/" target="_blank" class="navbar-item">
+            Euskera
+          </a>
+          <hr class="navbar-divider">
+          <a href="chekulhan.github.io" class="navbar-item">
+            Prolog Loan System
+          </a>
+          <a href="ncd.html" class="navbar-item">
+            Prolog Money Markets
+          </a>
+          
+
+         
+        </div>
+      </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" disabled>
+            <strong>Sign up</strong>
+          </a>
+          <a class="button is-light" disabled>
+            Log in
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- end nav bar -->
+
+<div class="box cta">
+  <p class="has-text-centered">
+    <span class="tag is-primary">New</span> <a href="ncd.html">Money Market</a> prolog demo application.
+  </p>
+</div>
+
+  <section class="section has-background-primary">
+    <div class="container has-text-centered">
+      <h2 class="title is-2 has-text-white-bis">
+        Loan and Credit Card System
+      </h2>
+      <p class="subtitle">
+          Written in the <b>Prolog</b> programming language using <br><br>
+           <a href="http://tau-prolog.org/" target="_blank"><img src="images/tauprolog64.png"></a>
+        </p>
+    </section>
+
+
+    <section class="section has-background-light">
+      <div class="container has-text-centered">       
+
+        <div class="is-size-3">
+          Go ahead and query the loan system 
+        </div>
+        <div class="help">Your results will appear after the buttons below.</div>
+        <br>
+
+        <!-- Name -->
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" id="name" style="width: 200px;" placeholder="Please enter a name." >
+            <button id="btnQuery8" data-action="person_loans" class="btnQuery button is-primary">What loans?</button><br>
+
+          </div>
+        </div>
+
+        
+        <br>
+        <div class="columns">
+          <div class="column is-one-quarter">
+            <button id="btnQuery1" data-action="cards" class="btnQuery button is-primary">What card types are there?</button>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery2" data-action="loans" class="btnQuery button is-primary">What loan types are there?</button><br><br>
+
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery3" data-action="debit" class="btnQuery button is-primary">Who has a debit card?</button><br><br>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery4" data-action="credit" class="btnQuery button is-primary">Who has a credit card?</button><br><br>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-one-quarter">
+            <button id="btnQuery5" data-action="who_has_mortgage" class="btnQuery button is-primary">Who has a mortgage?</button><br><br>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery6" data-action="who_has_car_loan" class="btnQuery button is-primary">Who has a car loan?</button><br><br>
+          </div>
+          <div class="column is-one-quarter">
+            <button id="btnQuery7" data-action="who_has_student_loan" class="btnQuery button is-primary">Who has a student loan?</button><br><br>
+          </div>
+         
+        </div>
+
+        
+        <div id="entries" style="color: lightcoral;"></div>
+
+        <br>
+        <div id="results" class="box" style="display: none;">
+          <article class="media">
+          <div class="media-content">
+            <div class="content-placeholder"></div>
+          </div>
+        </article>
+        </div>
+        
+
+    </div>
+</section>
+
+    <section class="section has-background-warning">
+      <div class="container has-text-centered">
+
+            <div class="is-size-3">The Prolog Knowledge Base</div>
+	    <div class="help">Below is the prolog source code. Can you figure out how it works?</div>
+	    <br>
+            <!-- Prolog Program -->
+            <textarea rows="22" cols="50" id="program" class="textarea is-info is-small"></textarea>
+            <br>
+            
+            <button id="btnUpdateProgram" class="button is-danger is-light">Update Knowledge Base</button><br><br>
+            <p class="help">Use this button to update the knowledge base. i.e add a new line.</p>
+            <p class="help">For example, add the line: <i>takeout_card(sarah, card(debit)).</i> OR <i>takeout_loan(sarah, loan(student)).</i></p>
+	    <p class="help">Lower case letters must be used and a full stop is required. These are prolog conventions.</i></p>
+        </div>  
+      </section>
+
+
+ 
+
+
+  <script>
+    $(document).ready(function() {
+  
+      // Check for click events on the navbar burger icon
+      $(".navbar-burger").click(function() {
+  
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          $(".navbar-burger").toggleClass("is-active");
+          $(".navbar-menu").toggleClass("is-active");
+  
+      });
+    });
+  </script>
+</body>
+
+</html>
